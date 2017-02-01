@@ -2,7 +2,9 @@
 #define MEALPLANNER_H
 
 #include <QtWidgets/QMainWindow>
+#include <qthread.h>
 #include "ui_mealplanner.h"
+#include "recipethreadcontroller.h"
 
 class MealPlanner : public QMainWindow
 {
@@ -11,6 +13,12 @@ class MealPlanner : public QMainWindow
 public:
 	MealPlanner(QWidget *parent = 0);
 	~MealPlanner();
+
+	RecipeThreadController* m_pController;
+
+
+	public slots:
+	void onCreateRecipe();
 
 private:
 	Ui::MealPlannerClass ui;
