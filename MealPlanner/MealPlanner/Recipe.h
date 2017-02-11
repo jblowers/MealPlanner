@@ -23,7 +23,7 @@ public:
 	bool CheckWhole30();
 
 	// methods
-
+	int addIngredient(Ingredient ing);
 
 
 };

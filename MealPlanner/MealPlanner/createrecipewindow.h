@@ -13,7 +13,7 @@ public:
 	CreateRecipeWindow(QWidget *parent = 0);
 	~CreateRecipeWindow();
 
-private:
+//private:
 	Ui::CreateRecipeWindow ui;
 };
 

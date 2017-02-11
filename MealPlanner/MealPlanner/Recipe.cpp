@@ -27,3 +27,10 @@ bool Recipe::CheckWhole30()
 
 
 
+int Recipe::addIngredient(Ingredient ing)
+{
+	m_IngredientList.append(ing);
+
+	return 1;
+
+}

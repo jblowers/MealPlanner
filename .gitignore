@@ -1,3 +1,5 @@
 *.sdf
 *.tlog
 MealPlanner/MealPlanner/GeneratedFiles/
+*.db
+*.opensdf
