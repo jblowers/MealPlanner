@@ -7,6 +7,15 @@
 #include "recipethreadcontroller.h"
 #include "RecipeDetailsWidget.h"
 
+#include "qspinbox.h"
+#include "qfiledialog.h"
+
+
+
+
+
+
+
 class MealPlanner : public QMainWindow
 {
 	Q_OBJECT
@@ -22,6 +31,12 @@ public:
 
 	// methods
 
+	bool m_bCalendarVisible;
+
+
+	// debug methods
+	void addDefaultRecipes();
+
 
 protected:
 
@@ -31,8 +46,20 @@ protected:
 	void onCreateRecipe();
 	void onUpdateGui(Recipe*, int);
 	void onUpdateGui(QList<Recipe> RecList);
-
+	void onSaveNewRecipe(Recipe rec);
 	void onNewRecClicked(QListWidgetItem*);
+	void onToggleCalendar();
+	void onLogRecipe(Recipe rec);
+	void onEditRecipe();
+	void onRemoveSelectedRecipe();
+	void onAddRecipesFromFileClicked();
+	void onBrowseForRecipeFileClicked();
+
+signals:
+	void PopulateCreateRecWindow(Recipe);
+	void RemoveRecipeAtSignal(int);
+
+	void AddRecipesFromFileSignal(QString);
 
 
 private:

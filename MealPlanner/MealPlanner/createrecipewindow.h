@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <qdialog.h>
 #include "ui_createrecipewindow.h"
+#include "Recipe.h"
+
 
 class CreateRecipeWindow : public QDialog
 {
@@ -13,7 +15,19 @@ public:
 	CreateRecipeWindow(QWidget *parent = 0);
 	~CreateRecipeWindow();
 
-//private:
+signals:
+
+	void NewRecipeSignal(Recipe rec);
+
+	public slots :
+
+		void onSaveRecipeClicked();
+		void onAddIngredientRowClicked();
+		void onPopulateWithRecipe(Recipe);
+		void onRemoveSelectedRowClicked();
+
+
+public:
 	Ui::CreateRecipeWindow ui;
 };
 

@@ -19,16 +19,7 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="leftMargin">
-      <number>8</number>
-     </property>
-     <property name="topMargin">
-      <number>8</number>
-     </property>
-     <property name="rightMargin">
-      <number>8</number>
-     </property>
-     <property name="bottomMargin">
+     <property name="margin">
       <number>8</number>
      </property>
      <item>
@@ -54,6 +45,20 @@
         <widget class="QPushButton" name="DiscardChangesButton">
          <property name="text">
           <string>Discard Changes</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="AddIngredientRowButton">
+         <property name="text">
+          <string>Add Ingredient Row</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="RemoveSelectedRowButton">
+         <property name="text">
+          <string>Remove Selected Row</string>
          </property>
         </widget>
        </item>

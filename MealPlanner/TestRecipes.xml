@@ -1,0 +1,47 @@
+<Recipe>
+    <title>Eggs</title>
+    <IngredientList>
+        <Ingredient>
+            <name>Eggs</name>
+            <quantity>3</quantity>
+            <unit>Quant</unit>
+        </Ingredient>
+        <Ingredient>
+            <name>oil</name>
+            <quantity>1</quantity>
+            <unit>Tablespoon</unit>
+        </Ingredient>
+        <Ingredient>
+            <name>salt</name>
+            <quantity>1</quantity>
+            <unit>Teaspoon</unit>
+        </Ingredient>
+    </IngredientList>
+    <cooktime>20</cooktime>
+    <description>Cook the eggs in the oil and add salt to taste</description>
+    <whole30flag>1</whole30flag>
+</Recipe>
+
+<Recipe>
+    <title>Eggs2</title>
+    <IngredientList>
+        <Ingredient>
+            <name>Eggs</name>
+            <quantity>6</quantity>
+            <unit>Quant</unit>
+        </Ingredient>
+        <Ingredient>
+            <name>oil</name>
+            <quantity>2</quantity>
+            <unit>Tablespoon</unit>
+        </Ingredient>
+        <Ingredient>
+            <name>salt</name>
+            <quantity>2</quantity>
+            <unit>Teaspoon</unit>
+        </Ingredient>
+    </IngredientList>
+    <cooktime>20</cooktime>
+    <description>Cook the eggs in the oil and add salt to taste</description>
+    <whole30flag>1</whole30flag>
+</Recipe>

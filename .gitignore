@@ -3,3 +3,6 @@
 MealPlanner/MealPlanner/GeneratedFiles/
 *.db
 *.opensdf
+MealPlanner/Interfaces/
+MealPlanner/FlatbuffersInterfaces_generated.h
+Common/

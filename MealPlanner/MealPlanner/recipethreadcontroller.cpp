@@ -4,8 +4,10 @@ RecipeThreadController::RecipeThreadController(QObject *parent)
 	: QObject(parent)
 {
 
-	
-
+	m_SaveTimer.setInterval(5000);// every five seconds save the info to disk
+	connect(&m_SaveTimer, SIGNAL(timeout()), this, SLOT(onSaveToFile()));
+	//m_SaveTimer.start();
+	m_bRecipesChanged = true;
 
 }
 
@@ -15,58 +17,85 @@ RecipeThreadController::~RecipeThreadController()
 }
 
 
+void RecipeThreadController::onSaveToFile()
+{
+	// want to save the recipes to file
+	if (m_bRecipesChanged) {
+		CStdXmlReg reg;
+		Recipe CurrRec;
+		Ingredient* ing;
+		string str;
+		QList<Recipe> list(m_RecipeList);
+		for (int i = 0; i < m_RecipeList.length(); i++) {
+			CurrRec = list.takeFirst();
+			str = CurrRec.getTitle().toStdString();
+			reg.Set(str, "Recipe[].title", i);
+			int j = 1;
+			for (int j = 0; j < CurrRec.getNumberOfIngredients(); j++) {
+				ing = CurrRec.getIngredient(j);
+				reg.Set(ing->getName().toStdString().c_str(), "Recipe[].IngredientList.Ingredient[].name", i, j);
+				reg.Set(ing->getQuantity(), "Recipe[].IngredientList.Ingredient[].quantity", i, j);
+				reg.Set(ing->getUnitString().toStdString().c_str(), "Recipe[].IngredientList.Ingredient[].unit", i, j);
+			}
+			reg.Set(CurrRec.m_dTimeToCook, "Recipe[].cooktime", i);
+			str = CurrRec.m_strRecipeDescription.toStdString();
+			reg.Set(str.c_str(), "Recipe[].description", i);
+			reg.Set(CurrRec.CheckWhole30(), "Recipe[].whole30flag", i);
+
+		}
+
+		bool bRet = reg.SaveXml("S:\\Git Repos\\MealPlanner\\MealPlanner\\TestRecipes.xml");
+
+		m_bRecipesChanged = false;
+
+	}
+	else {
+
+	}
+}
+
+
 void RecipeThreadController::onStartController()
 {
 
 	// set up connections
-
+	
 
 
 }
 
+void RecipeThreadController::onNewRecipeAdded(Recipe rec)
+{
+	/// TODO: do some checks to see if it is the same as one already in the list
+
+	emit logRecipe(rec);
+	// create a copy and add to the list.
+	Recipe newRecipe(rec);
+	m_RecipeList.append(newRecipe);
+	m_bRecipesChanged = true;
+	onSaveToFile();
+	UpdateGuiRecipes();
+
+}
+
+void RecipeThreadController::onRemoveRecipeAt(int nInd)
+{
+	m_RecipeList.removeAt(nInd);
+	m_bRecipesChanged = true;
+	onSaveToFile(); // do we want to do this right away? Or wait in case it was an accident?
+	UpdateGuiRecipes();
+}
 
 
 void RecipeThreadController::onCreateRecipe()
 {
-	m_RecipeList.clear();
+	
 
-	Recipe rec;
-	rec.m_dTimeToCook = 60;
-	rec.m_strName = "Fried Eggs";
-	Ingredient ing;
-	ing.m_bWhole30 = true;
-	ing.m_Unit = Ingredient::Units::Quant;
-	ing.m_strName = "Egg";
-	ing.m_dQuantity = 4;
+}
 
-	rec.addIngredient(ing);
-
-	ing.m_Unit = Ingredient::Units::Tablespoon;
-	ing.m_strName = "Oil";
-	ing.m_dQuantity = 1;
-
-	rec.addIngredient(ing);
-
-	m_RecipeList.append(rec);
-
-	rec.m_IngredientList.clear();
-	rec.m_dTimeToCook = 20;
-	rec.m_strName = "Baked Potato";
-	ing.m_bWhole30 = true;
-	ing.m_Unit = Ingredient::Units::Quant;
-	ing.m_strName = "Potato";
-	ing.m_dQuantity = 2;
-	rec.addIngredient(ing);
-
-	m_RecipeList.append(rec);
-
-	UpdateGuiRecipes();
-
-	//CreateRecipeWindow* win = new CreateRecipeWindow(this);
-	//win->show();
-
-
-
+void RecipeThreadController::onAddRecipesFromFile(QString strFilePath)
+{
+	// open file, loop through Recipes and add each to the current list, then update the gui
 
 
 }
@@ -76,15 +105,15 @@ void RecipeThreadController::UpdateGuiRecipes()
 {
 	// emit signals to GUI to update the list
 	// perhaps use a pointer to an array of Recipe objects?
-	int nNumRecs = m_RecipeList.length();
-	Recipe* recPointer = new Recipe[nNumRecs];
+	//int nNumRecs = m_RecipeList.length();
+	//Recipe* recPointer = new Recipe[nNumRecs];
 
-	for (int i = 0; i < nNumRecs; i++) {
-		recPointer[i] = m_RecipeList.at(i);
-	}
+	//for (int i = 0; i < nNumRecs; i++) {
+	//	recPointer[i] = Recipe(m_RecipeList.at(i));
+	//}
 
-
-		emit UpdateGuiSignal(m_RecipeList);
+	QList<Recipe> RecListToPass = m_RecipeList;
+	emit UpdateGuiSignal(RecListToPass);
 	//emit UpdateGuiSignal(recPointer, nNumRecs);
 
 }
