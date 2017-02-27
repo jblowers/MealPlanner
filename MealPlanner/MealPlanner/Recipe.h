@@ -18,8 +18,9 @@ public:
 	QList<Ingredient> m_IngredientList;
 	bool m_bWhole30;
 	double m_dTimeToCook; // minutes
+	int m_nNumIngredients;
 
-	int getNumberOfIngredients() { return m_IngredientList.length(); }
+	int getNumberOfIngredients() { return m_nNumIngredients; }
 	QString getTitle() { return m_strName; }
 	bool CheckWhole30();
 	QString getDescription() { return m_strRecipeDescription; }
@@ -27,6 +28,7 @@ public:
 
 	// methods
 	int addIngredient(Ingredient ing);
+	void RemoveAllIngredients() { m_IngredientList.clear(); m_nNumIngredients = 0; }
 	Ingredient* getIngredient(int nIndex) { return &m_IngredientList[nIndex]; }
 	QString m_strRecipeDescription;
 

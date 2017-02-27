@@ -34,6 +34,7 @@ MealPlanner::MealPlanner(QWidget *parent)
 	connect(ui.BrowseForRecipeFileButton, SIGNAL(clicked()), this, SLOT(onBrowseForRecipeFileClicked()));
 	m_pCreateRecipeWin = new CreateRecipeWindow(this);
 	connect(ui.ToggleCalendarButton, SIGNAL(clicked()), this, SLOT(onToggleCalendar()));
+	connect(ui.SaveListAsButton, SIGNAL(clicked()), this, SLOT(onSaveCurrentListAs()));
 
 	connect(m_pController, SIGNAL(logRecipe(Recipe)), this, SLOT(onLogRecipe(Recipe)));
 	connect(this, SIGNAL(AddRecipesFromFileSignal(QString)), m_pController, SLOT(onAddRecipesFromFile(QString)));
@@ -50,7 +51,7 @@ MealPlanner::MealPlanner(QWidget *parent)
 
 	//connect(m_pController, SIGNAL(UpdateGuiSignal(Recipe*, int)), this, SLOT(onUpdateGui(Recipe*, int)));
 	connect(m_pController, SIGNAL(UpdateGuiSignal(QList<Recipe>)), this, SLOT(onUpdateGui(QList<Recipe>)));
-
+	connect(this, SIGNAL(SaveCurrentListToFile(QString)), m_pController, SLOT(onSaveToFile(QString)));
 	
 
 	//connect(this, SIGNAL(closeEvent()), m_pDetailsWidget, SLOT(deleteLater()));
@@ -64,7 +65,9 @@ MealPlanner::MealPlanner(QWidget *parent)
 
 
 
-	addDefaultRecipes();
+	//addDefaultRecipes();
+
+	LoadDefaultRecipeList();
 
 
 
@@ -78,6 +81,43 @@ MealPlanner::~MealPlanner()
 
 }
 
+
+
+void MealPlanner::onSaveCurrentListAs()
+{
+	QString fileName = QFileDialog::getSaveFileName(this, tr("Save Current List File"), "", tr("xml files (*.xml)"));
+	
+
+	emit SaveCurrentListToFile(fileName);
+	_sleep(5000);
+	QFile fil(fileName);
+	if (fil.exists())  {
+
+		QMessageBox qbox;
+		qbox.setText("The current list has been saved to: " + fileName);
+		qbox.exec();
+
+	}
+	else {
+		QMessageBox qbox;
+		qbox.setText("Save failed... File could not be written: " + fileName);
+		qbox.exec();
+	}
+}
+
+
+void MealPlanner::LoadDefaultRecipeList()
+{
+	QString strFile = ui.WorkingListLineEdit->text();
+	QFile fil(strFile);
+	if (fil.exists()) {
+		onAddRecipesFromFileClicked(strFile);
+
+	}
+
+}
+
+
 void MealPlanner::onBrowseForRecipeFileClicked()
 {
 	QString fileName = QFileDialog::getOpenFileName(this, tr("Open Recipe File"), "", tr("xml files (*.xml)"));
@@ -85,11 +125,13 @@ void MealPlanner::onBrowseForRecipeFileClicked()
 
 }
 
-void MealPlanner::onAddRecipesFromFileClicked()
+void MealPlanner::onAddRecipesFromFileClicked(QString strPath)
 {
-	QString path = ui.AddRecipesFromFileLineEdit->text();
-	if (!path.isEmpty()) {
-		emit AddRecipesFromFileSignal(path);
+	if (strPath.isEmpty()) {
+		strPath = ui.AddRecipesFromFileLineEdit->text();
+	}
+	if (!strPath.isEmpty()) {
+		emit AddRecipesFromFileSignal(strPath);
 	}
 
 }
@@ -100,14 +142,6 @@ void MealPlanner::onRemoveSelectedRecipe()
 	emit RemoveRecipeAtSignal(nSelected);
 }
 
-
-void MealPlanner::onEditRecipe()
-{
-	int nSelection = ui.listWidget->currentRow();
-	Recipe rec = m_pController->GetRecAt(nSelection);
-	emit PopulateCreateRecWindow(rec);
-
-}
 
 void MealPlanner::onLogRecipe(Recipe rec)
 {
@@ -272,7 +306,6 @@ void MealPlanner::populateGuiWithRecipeData(Recipe rec)
 
 
 	}
-	m_pDetailsWidget->SetEditableMode(false);
 
 	//QListWidgetItem* item;
 	//for (int i = 0; i < rec.m_IngredientList.length(); i++) {
@@ -286,15 +319,37 @@ void MealPlanner::populateGuiWithRecipeData(Recipe rec)
 
 void MealPlanner::onCreateRecipe()
 {
-	if ( !m_pCreateRecipeWin )
+	if (!m_pCreateRecipeWin) {
 		m_pCreateRecipeWin = new CreateRecipeWindow(this);
-	m_pCreateRecipeWin->ui.RecDetailsWidget->SetEditableMode(true);
+		m_pCreateRecipeWin->ui.RecDetailsWidget->SetEditableMode(true);
+	}
+	else {
+		m_pCreateRecipeWin->ui.RecDetailsWidget->SetEditableMode(true);
+	}
+	Recipe rec;
+	emit PopulateCreateRecWindow(rec);
+	if (!m_pCreateRecipeWin->isHidden()) {
+		m_pCreateRecipeWin->hide();
+	}
 	m_pCreateRecipeWin->show();
-
-	
 
 }
 
+
+void MealPlanner::onEditRecipe()
+{
+	if (!m_pCreateRecipeWin) {
+		m_pCreateRecipeWin = new CreateRecipeWindow(this);
+		m_pCreateRecipeWin->ui.RecDetailsWidget->SetEditableMode(true);
+	}
+	int nSelection = ui.listWidget->currentRow();
+	Recipe rec = m_pController->GetRecAt(nSelection);
+	emit PopulateCreateRecWindow(rec);
+	if (!m_pCreateRecipeWin->isHidden()) {
+		m_pCreateRecipeWin->hide();
+	}
+	m_pCreateRecipeWin->show();
+}
 
 void MealPlanner::onUpdateGui(QList<Recipe> RecList)
 {

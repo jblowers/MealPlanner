@@ -9,6 +9,7 @@
 
 #include "qspinbox.h"
 #include "qfiledialog.h"
+#include "qmessagebox.h"
 
 
 
@@ -37,6 +38,8 @@ public:
 	// debug methods
 	void addDefaultRecipes();
 
+	void LoadDefaultRecipeList();
+
 
 protected:
 
@@ -52,13 +55,14 @@ protected:
 	void onLogRecipe(Recipe rec);
 	void onEditRecipe();
 	void onRemoveSelectedRecipe();
-	void onAddRecipesFromFileClicked();
+	void onAddRecipesFromFileClicked(QString strPath = "");
 	void onBrowseForRecipeFileClicked();
+	void onSaveCurrentListAs();
 
 signals:
 	void PopulateCreateRecWindow(Recipe);
 	void RemoveRecipeAtSignal(int);
-
+	void SaveCurrentListToFile(QString);
 	void AddRecipesFromFileSignal(QString);
 
 

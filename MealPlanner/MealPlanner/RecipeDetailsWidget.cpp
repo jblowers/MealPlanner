@@ -18,7 +18,10 @@ void RecipeDetailsWidget::AddIngredientToList(int nRow, QString strName, double 
 
 	table->insertRow(nRow);
 
-	QTableWidgetItem* item = new QTableWidgetItem(strName);
+	QTableWidgetItem* item = new QTableWidgetItem();
+	printf("ITem Name: %s\n", strName.toStdString().c_str());
+	item->setText(strName);
+	table->setItem(nRow, 0, item);
 	
 	QDoubleSpinBox* quantSpinBox = new QDoubleSpinBox(table);
 
@@ -30,10 +33,10 @@ void RecipeDetailsWidget::AddIngredientToList(int nRow, QString strName, double 
 	UnitComboBox* unitBox = new UnitComboBox(table);
 	unitBox->setCurrentIndex(nUnit);
 
-	table->setItem(nRow, 0, item);
 	table->setCellWidget(nRow, 1, quantSpinBox);
 	table->setCellWidget(nRow, 2, unitBox);
 
+	//SetEditableMode(bEditable);
 
 }
 
@@ -64,10 +67,10 @@ bool RecipeDetailsWidget::SetTableEditable(bool bEditable)
 	for (int i = 0; i < ui.IngredientTableWidget->rowCount(); i++) {
 		for (int j = 0; j < ui.IngredientTableWidget->columnCount(); j++) {
 			Qt::ItemFlag::ItemIsEditable;
-			item = ui.IngredientTableWidget->item(i, j);
-			if (!item) {
+			//item = ui.IngredientTableWidget->item(i, j);
+			//if (!item) {
 				item = new QTableWidgetItem();
-			}
+			//}
 				flags = item->flags();
 				if (bEditable)
 					flags &= Qt::ItemIsEditable;

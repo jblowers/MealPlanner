@@ -20,7 +20,7 @@ public:
 
 
 	QList<Recipe> m_RecipeList; // This is where all the recipes actually exist
-
+	QString m_strSavePath;
 
 	// methods
 
@@ -36,12 +36,13 @@ public:
 
 public slots:
 
-	void onSaveToFile();
+void onSaveToFile(QString strFilePath = "");
 
 	void onStartController();
 	void onCreateRecipe();
 
 	void onNewRecipeAdded(Recipe rec);
+	void onNewRecipesAdded(QList<Recipe> recList);
 	void onRemoveRecipeAt(int nInd);
 	void onAddRecipesFromFile(QString strFilePath);
 

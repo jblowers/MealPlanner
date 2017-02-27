@@ -4,10 +4,11 @@
 Recipe::Recipe()
 {
 	//m_IngredientList.append
-	m_strName = "No Name";
+	m_strName = "";
 	m_bWhole30 = false;
-
-
+	m_dTimeToCook = 0;
+	m_IngredientList.clear();
+	m_nNumIngredients = 0;
 }
 
 
@@ -30,7 +31,7 @@ bool Recipe::CheckWhole30()
 int Recipe::addIngredient(Ingredient ing)
 {
 	m_IngredientList.append(ing);
-
+	m_nNumIngredients = m_IngredientList.length();
 	return 1;
 
 }
