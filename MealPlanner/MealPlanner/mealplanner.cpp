@@ -32,6 +32,7 @@ MealPlanner::MealPlanner(QWidget *parent)
 	connect(ui.RemoveSelectedRecipeButton, SIGNAL(clicked()), this, SLOT(onRemoveSelectedRecipe()));
 	connect(ui.AddRecipesFromFileButton, SIGNAL(clicked()), this, SLOT(onAddRecipesFromFileClicked()));
 	connect(ui.BrowseForRecipeFileButton, SIGNAL(clicked()), this, SLOT(onBrowseForRecipeFileClicked()));
+	connect(ui.BrowseForWorkingListButton, SIGNAL(clicked()), this, SLOT(onBrowseForDefaultFileClicked()));
 	m_pCreateRecipeWin = new CreateRecipeWindow(this);
 	connect(ui.ToggleCalendarButton, SIGNAL(clicked()), this, SLOT(onToggleCalendar()));
 	connect(ui.SaveListAsButton, SIGNAL(clicked()), this, SLOT(onSaveCurrentListAs()));
@@ -89,7 +90,7 @@ void MealPlanner::onSaveCurrentListAs()
 	
 
 	emit SaveCurrentListToFile(fileName);
-	_sleep(5000);
+	_sleep(500);
 	QFile fil(fileName);
 	if (fil.exists())  {
 
@@ -117,6 +118,13 @@ void MealPlanner::LoadDefaultRecipeList()
 
 }
 
+
+void MealPlanner::onBrowseForDefaultFileClicked()
+{
+	QString fileName = QFileDialog::getOpenFileName(this, tr("Set default recipe file"), "", tr("xml files (*.xml)"));
+	ui.WorkingListLineEdit->setText(fileName);
+	LoadDefaultRecipeList();
+}
 
 void MealPlanner::onBrowseForRecipeFileClicked()
 {
